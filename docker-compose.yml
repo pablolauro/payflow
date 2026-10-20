@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgres:16
-    container_name: playflow-postgres
+    container_name: payflow-postgres
     restart: always
     environment:
       POSTGRES_DB: payflow
@@ -10,7 +10,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - playflow_pgdata:/var/lib/postgresql/data
+      - payflow_pgdata:/var/lib/postgresql/data
       
 volumes:
- playflow_pgdata:
+ payflow_pgdata:
