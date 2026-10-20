@@ -1,4 +1,4 @@
 /**
  * Implementação do banco: entidades JPA e repositórios.
  */
-package com.pablito.playflow.transaction.infrastructure.persistence;
+package com.pablito.payflow.transaction.infrastructure.persistence;
