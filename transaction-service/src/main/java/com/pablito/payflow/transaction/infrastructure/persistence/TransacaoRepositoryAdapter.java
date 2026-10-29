@@ -4,6 +4,9 @@ import com.pablito.payflow.transaction.application.port.TransacaoRepository;
 import com.pablito.payflow.transaction.domain.Transacao;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+import java.util.UUID;
+
 @Repository
 public class TransacaoRepositoryAdapter implements TransacaoRepository {
 
@@ -18,7 +21,12 @@ public class TransacaoRepositoryAdapter implements TransacaoRepository {
         repository.save(toEntity(transacao));
     }
 
-    public TransacaoEntity toEntity(Transacao transacao) {
+    @Override
+    public Optional<Transacao> buscarPorId(UUID id) {
+        return repository.findById(id).map(this::toDomain);
+    }
+
+    private TransacaoEntity toEntity(Transacao transacao) {
         return new TransacaoEntity(transacao.getId(),
                 transacao.getMerchantId(),
                 transacao.getValor(),
@@ -27,7 +35,7 @@ public class TransacaoRepositoryAdapter implements TransacaoRepository {
                 transacao.getCriadaEm());
     }
 
-    public Transacao toDomain(TransacaoEntity entity) {
+    private Transacao toDomain(TransacaoEntity entity) {
         return Transacao.reconstituir(
                 entity.getId(),
                 entity.getMerchantId(),

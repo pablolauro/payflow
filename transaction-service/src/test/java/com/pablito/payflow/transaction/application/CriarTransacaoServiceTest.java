@@ -13,8 +13,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 
@@ -34,7 +34,7 @@ class CriarTransacaoServiceTest {
         Transacao transacao = service.executar(command);
 
         verify(repository).salvar(transacao);
-        assertEquals(StatusTransacao.RECEBIDA,transacao.getStatus());
+        assertThat(transacao.getStatus()).isEqualTo(StatusTransacao.RECEBIDA);
     }
 
     @Test

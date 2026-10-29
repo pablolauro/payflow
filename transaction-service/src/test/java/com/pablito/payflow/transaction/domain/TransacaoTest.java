@@ -4,8 +4,8 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class TransacaoTest {
 
@@ -13,9 +13,9 @@ class TransacaoTest {
     void deveCriarTransacaoComStatusRecebida(){
         Transacao transacao = Transacao.criar("loja-123",new BigDecimal("19.99"),MeioPagamento.CREDITO);
 
-        assertNotNull(transacao.getId());
-        assertEquals(StatusTransacao.RECEBIDA, transacao.getStatus());
-        assertNotNull(transacao.getCriadaEm());
+        assertThat(transacao.getId()).isNotNull();
+        assertThat(transacao.getCriadaEm()).isNotNull();
+        assertThat(transacao.getStatus()).isEqualTo(StatusTransacao.RECEBIDA);
     }
 
     @Test
@@ -26,37 +26,34 @@ class TransacaoTest {
     }
 
     @Test
-    void naoDeveCriarMerchantIdEmBranco() {
+    void naoDeveCriarTransacaoComMerchantIdEmBranco() {
         assertThatThrownBy(() -> Transacao.criar("",new BigDecimal("19.99"), MeioPagamento.PIX))
                 .isInstanceOf(TransacaoInvalidaException.class)
                 .hasMessage("O lojista é obrigatório.");
     }
 
     @Test
-    void naoDeveCriarMeioDePagamentoNulo() {
+    void naoDeveCriarTransacaoComMeioDePagamentoNulo() {
         assertThatThrownBy(() -> Transacao.criar("loja-123", new BigDecimal("19.99"), null))
                 .isInstanceOf(TransacaoInvalidaException.class)
                 .hasMessage("O meio de pagamento é obrigatório.");
     }
 
     @Test
-    void transacaoViraAutorizada() {
+    void deveAutorizarTransacaoRecebida() {
         Transacao transacao = Transacao.criar("loja-123",new BigDecimal("19.99"),MeioPagamento.CREDITO);
         transacao.autorizar();
 
-        assertEquals(StatusTransacao.AUTORIZADA,transacao.getStatus());
+        assertThat(transacao.getStatus()).isEqualTo(StatusTransacao.AUTORIZADA);
     }
 
     @Test
-    void naoNegarDepoisDeAutorizada() {
+    void naoDeveNegarTransacaoAutorizada() {
         Transacao transacao = Transacao.criar("loja-123",new BigDecimal("19.99"),MeioPagamento.CREDITO);
         transacao.autorizar();
 
         assertThatThrownBy(transacao::negar)
                 .isInstanceOf(TransacaoInvalidaException.class)
                 .hasMessage("Só é possível alterar uma transação com status RECEBIDA.");
-
     }
-
-
 }
